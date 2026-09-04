@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>水野芸能プロダクション</title>
+<style>
+  :root{
+    --navy:#1B2A4A;
+    --navy-deep:#101a30;
+    --cream:#F7F4EE;
+    --cream-warm:#F1ECE1;
+    --gold:#B08968;
+    --gold-soft:#D8C3A5;
+    --ink:#2B2A28;
+    --line: rgba(27,42,74,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Hiragino Sans","Yu Gothic",sans-serif;
+    line-height:1.7;
+  }
+  h1,h2,h3,.serif{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    font-weight:600;
+    letter-spacing:.02em;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+
+  /* Header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(247,244,238,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:18px;
+    padding-bottom:18px;
+  }
+  .brand{
+    font-size:20px;
+    color:var(--navy);
+    letter-spacing:.08em;
+  }
+  .brand small{
+    display:block;
+    font-family:"Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:10px;
+    letter-spacing:.25em;
+    color:var(--gold);
+    margin-bottom:2px;
+  }
+  nav{display:flex;align-items:center;gap:28px;}
+  nav a{
+    font-size:14px;
+    text-decoration:none;
+    color:var(--ink);
+    position:relative;
+    padding-bottom:2px;
+  }
+  nav a:hover{color:var(--navy);}
+  #adminOpenBtn{
+    font-size:11px;
+    color:#9a968e;
+    background:transparent;
+    border:1px solid var(--line);
+    padding:5px 12px;
+    border-radius:2px;
+    cursor:pointer;
+    letter-spacing:.03em;
+    font-family:inherit;
+  }
+  #adminOpenBtn:hover{border-color:var(--navy);color:var(--navy);}
+
+  /* Hero */
+  .hero{
+    padding:96px 0 88px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    right:-120px;top:-160px;
+    width:420px;height:420px;
+    border-radius:50%;
+    background:radial-gradient(circle, var(--gold-soft) 0%, transparent 70%);
+    opacity:.55;
+  }
+  .hero-eyebrow{
+    font-size:12px;
+    letter-spacing:.3em;
+    color:var(--gold);
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(32px,5vw,52px);
+    color:var(--navy);
+    margin:0 0 22px;
+    max-width:14ch;
+  }
+  .hero p{
+    max-width:46ch;
+    color:#514f4a;
+    font-size:15.5px;
+  }
+
+  /* Section heading */
+  .section{padding:80px 0;}
+  .section + .section{border-top:1px solid var(--line);}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:40px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .section-head h2{
+    font-size:26px;
+    color:var(--navy);
+    margin:0;
+  }
+  .section-head span{
+    font-size:13px;
+    color:#8a8781;
+  }
+
+  /* Talent grid */
+  .talent-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+    gap:28px;
+  }
+  .talent-card{
+    background:#fff;
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+  .talent-photo{
+    width:100%;
+    aspect-ratio: 3/4;
+    background:var(--cream-warm) center/cover no-repeat;
+    display:flex;align-items:center;justify-content:center;
+    color:#b7b2a6;
+    font-size:12px;
+    user-select:none;
+    -webkit-user-drag:none;
+  }
+  .talent-body{padding:16px 18px 20px;}
+  .talent-name{
+    font-size:17px;
+    color:var(--navy);
+    margin:0 0 4px;
+  }
+  .talent-romaji{
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--gold);
+    margin:0 0 10px;
+  }
+  .talent-meta{
+    font-size:12.5px;
+    color:#6b6862;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:4px 10px;
+  }
+  .talent-meta dt{color:var(--gold);}
+  .talent-meta dd{margin:0;}
+
+  .empty-state{
+    border:1px dashed var(--line);
+    padding:52px 24px;
+    text-align:center;
+    color:#8a8781;
+    font-size:14px;
+  }
+
+  footer{
+    padding:36px 0;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    color:#9a968e;
+  }
+  .footer-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  /* Modal */
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(16,26,48,0.55);
+    z-index:100;
+    align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#fff;
+    max-width:420px;
+    width:100%;
+    padding:32px 28px;
+    border-radius:2px;
+    max-height:88vh;
+    overflow-y:auto;
+  }
+  .modal h3{
+    color:var(--navy);
+    font-size:19px;
+    margin:0 0 6px;
+  }
+  .modal .sub{
+    font-size:12.5px;
+    color:#8a8781;
+    margin-bottom:22px;
+  }
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;
+    font-size:12.5px;
+    color:#514f4a;
+    margin-bottom:6px;
+  }
+  .field input,.field select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    font-size:14px;
+    font-family:inherit;
+    background:var(--cream);
+  }
+  .field input:focus,.field select:focus{
+    outline:2px solid var(--navy);
+    outline-offset:1px;
+  }
+  .modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+  }
+  .btn{
+    flex:1;
+    padding:11px;
+    border-radius:2px;
+    font-size:14px;
+    cursor:pointer;
+    border:1px solid var(--navy);
+    font-family:inherit;
+    letter-spacing:.03em;
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-deep);}
+  .btn-ghost{background:transparent;color:var(--navy);}
+  .btn-ghost:hover{background:var(--cream-warm);}
+  .error-msg{
+    font-size:12.5px;
+    color:#a83c3c;
+    margin-top:8px;
+    display:none;
+  }
+  .error-msg.show{display:block;}
+  .img-preview{
+    width:96px;height:128px;
+    background:var(--cream-warm) center/cover no-repeat;
+    border:1px solid var(--line);
+    margin-top:8px;
+    display:flex;align-items:center;justify-content:center;
+    color:#b7b2a6;
+    font-size:11px;
+  }
+  .admin-badge{
+    display:inline-block;
+    font-size:11px;
+    color:var(--gold);
+    border:1px solid var(--gold-soft);
+    padding:3px 10px;
+    border-radius:20px;
+    margin-bottom:14px;
+  }
+  .talent-list-admin{
+    margin-top:22px;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  .talent-list-admin li{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    padding:8px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .talent-list-admin button{
+    background:none;border:none;color:#a83c3c;cursor:pointer;font-size:12px;
+    font-family:inherit;
+  }
+
+  /* ===== Mobile (~680px以下) ===== */
+  @media (max-width: 680px){
+    .wrap{padding:0 20px;}
+
+    .header-inner{
+      padding-top:14px;
+      padding-bottom:14px;
+    }
+    .brand svg{ width:170px; height:36px; }
+    nav{gap:16px;}
+    nav a{font-size:12.5px;}
+
+    .hero{padding:56px 0 48px;}
+    .hero::before{
+      width:260px;height:260px;
+      right:-90px;top:-100px;
+    }
+    .hero h1{
+      font-size:clamp(26px,7vw,34px);
+      max-width:none;
+    }
+    .hero p{font-size:14px;}
+
+    .section{padding:52px 0;}
+    .section-head{margin-bottom:26px;}
+    .section-head h2{font-size:21px;}
+
+    .talent-grid{
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+    }
+    .talent-body{padding:12px 12px 16px;}
+    .talent-name{font-size:14.5px;}
+    .talent-romaji{font-size:9.5px;}
+    .talent-meta{font-size:11px;}
+
+    .empty-state{padding:36px 18px;font-size:13px;}
+
+    footer{
+      padding:28px 0;
+    }
+    .footer-inner{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:14px;
+    }
+
+    .modal{
+      padding:26px 20px;
+      max-width:100%;
+      margin:0 8px;
+    }
+    .modal h3{font-size:17px;}
+  }
+
+  @media (max-width: 380px){
+    .talent-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="brand">
+      <a href="javascript:void(0)" id="logoReload" style="display:inline-block;line-height:0;cursor:pointer;" title="トップに戻る（再読み込み）">
+        <svg width="230" height="46" viewBox="0 0 230 46" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="水野芸能プロダクション" oncontextmenu="return false" style="pointer-events:none;">
+          <text x="0" y="13" font-family="'Hiragino Sans','Yu Gothic',sans-serif" font-size="9" letter-spacing="2.2" fill="#B08968">MIZUNO GEINO PRODUCTION</text>
+          <text x="0" y="36" font-family="'Hiragino Mincho ProN','Yu Mincho',serif" font-weight="600" font-size="19" letter-spacing="1.4" fill="#1B2A4A">水野芸能プロダクション</text>
+        </svg>
+      </a>
+    </div>
+    <nav>
+      <a href="#talent">所属タレント</a>
+      <a href="#contact">お問い合わせ</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">SINCE 2026</div>
+    <h1>ひとりの個性を、<br>長く続く物語に。</h1>
+    <p>水野芸能プロダクションは、所属タレント一人ひとりの個性と可能性に向き合い、長期的な視点でキャリアを共に育てる芸能事務所です。</p>
+  </div>
+</section>
+
+<section class="section" id="talent">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>所属タレント</h2>
+      <span id="talentCount">0名 所属</span>
+    </div>
+    <div id="talentGrid" class="talent-grid"></div>
+    <div id="emptyState" class="empty-state">まだ所属タレントが登録されていません。</div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>お問い合わせ</h2>
+    </div>
+    <p style="max-width:44ch;color:#514f4a;font-size:14.5px;">出演オファー・取材のご相談などは、下記までお気軽にお問い合わせください。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span>© 2026 水野芸能プロダクション</span>
+    <button id="adminOpenBtn" type="button">管理者メニュー</button>
+  </div>
+</footer>
+
+<!-- 管理者ログイン -->
+<div class="modal-overlay" id="loginOverlay">
+  <div class="modal">
+    <span class="admin-badge">ADMIN</span>
+    <h3>管理者メニュー</h3>
+    <div class="sub">パスワードを入力してください</div>
+    <div class="field">
+      <label for="pwInput">パスワード</label>
+      <input type="password" id="pwInput" autocomplete="off" placeholder="••••">
+    </div>
+    <div class="error-msg" id="pwError">パスワードが違います。</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" id="loginCancel">キャンセル</button>
+      <button class="btn btn-primary" type="button" id="loginSubmit">ログイン</button>
+    </div>
+  </div>
+</div>
+
+<!-- 管理者パネル -->
+<div class="modal-overlay" id="adminOverlay">
+  <div class="modal">
+    <span class="admin-badge">ADMIN</span>
+    <h3>タレント登録</h3>
+    <div class="sub">新しい所属タレントの情報を入力してください</div>
+
+    <div class="field">
+      <label for="tPhoto">画像</label>
+      <input type="file" id="tPhoto" accept="image/*">
+      <div class="img-preview" id="tPhotoPreview">未選択</div>
+    </div>
+    <div class="field">
+      <label for="tName">名前</label>
+      <input type="text" id="tName" placeholder="例）山田太郎">
+    </div>
+    <div class="field">
+      <label for="tRomaji">ローマ字表記</label>
+      <input type="text" id="tRomaji" placeholder="例）Taro Yamada">
+    </div>
+    <div class="field">
+      <label for="tBirthday">誕生日</label>
+      <input type="text" id="tBirthday" placeholder="例）1/1">
+    </div>
+    <div class="field">
+      <label for="tBlood">血液型</label>
+      <select id="tBlood">
+        <option value="">選択してください</option>
+        <option>A型</option>
+        <option>B型</option>
+        <option>O型</option>
+        <option>AB型</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="tHome">出身地</label>
+      <input type="text" id="tHome" placeholder="例）東京都">
+    </div>
+    <div class="error-msg" id="formError">名前は必須です。</div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" id="adminClose">閉じる</button>
+      <button class="btn btn-primary" type="button" id="tAddBtn">登録する</button>
+    </div>
+
+    <div class="talent-list-admin">
+      <div class="sub" style="margin-bottom:6px;">登録済みタレント(削除可)</div>
+      <ul id="adminTalentList" style="list-style:none;padding:0;margin:0;"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('logoReload').addEventListener('click', () => {
+    location.reload();
+  });
+
+  // 画像の右クリック保存・ドラッグ保存を防止
+  document.addEventListener('contextmenu', e => {
+    if(e.target.closest('.talent-photo') || e.target.closest('svg')){
+      e.preventDefault();
+    }
+  });
+  document.addEventListener('dragstart', e => {
+    if(e.target.closest('.talent-photo') || e.target.closest('svg')){
+      e.preventDefault();
+    }
+  });
+
+  const ADMIN_PASSWORD = "4750";
+  let talents = [];
+  let pendingPhotoDataUrl = null;
+
+  const loginOverlay = document.getElementById('loginOverlay');
+  const adminOverlay = document.getElementById('adminOverlay');
+  const pwInput = document.getElementById('pwInput');
+  const pwError = document.getElementById('pwError');
+
+  document.getElementById('adminOpenBtn').addEventListener('click', () => {
+    pwInput.value = "";
+    pwError.classList.remove('show');
+    loginOverlay.classList.add('open');
+    pwInput.focus();
+  });
+  document.getElementById('loginCancel').addEventListener('click', () => {
+    loginOverlay.classList.remove('open');
+  });
+  document.getElementById('loginSubmit').addEventListener('click', tryLogin);
+  pwInput.addEventListener('keydown', e => { if(e.key === 'Enter') tryLogin(); });
+
+  function tryLogin(){
+    if(pwInput.value === ADMIN_PASSWORD){
+      loginOverlay.classList.remove('open');
+      adminOverlay.classList.add('open');
+      renderAdminList();
+    } else {
+      pwError.classList.add('show');
+    }
+  }
+
+  document.getElementById('adminClose').addEventListener('click', () => {
+    adminOverlay.classList.remove('open');
+  });
+
+  const tPhoto = document.getElementById('tPhoto');
+  const tPhotoPreview = document.getElementById('tPhotoPreview');
+  tPhoto.addEventListener('change', () => {
+    const file = tPhoto.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      pendingPhotoDataUrl = e.target.result;
+      tPhotoPreview.style.backgroundImage = `url(${pendingPhotoDataUrl})`;
+      tPhotoPreview.textContent = "";
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('tAddBtn').addEventListener('click', () => {
+    const name = document.getElementById('tName').value.trim();
+    const romaji = document.getElementById('tRomaji').value.trim();
+    const birthday = document.getElementById('tBirthday').value.trim();
+    const blood = document.getElementById('tBlood').value;
+    const home = document.getElementById('tHome').value.trim();
+    const formError = document.getElementById('formError');
+
+    if(!name){
+      formError.classList.add('show');
+      return;
+    }
+    formError.classList.remove('show');
+
+    talents.push({
+      id: Date.now(),
+      name, romaji, birthday, blood, home,
+      photo: pendingPhotoDataUrl
+    });
+
+    // reset form
+    document.getElementById('tName').value = "";
+    document.getElementById('tRomaji').value = "";
+    document.getElementById('tBirthday').value = "";
+    document.getElementById('tBlood').value = "";
+    document.getElementById('tHome').value = "";
+    tPhoto.value = "";
+    pendingPhotoDataUrl = null;
+    tPhotoPreview.style.backgroundImage = "";
+    tPhotoPreview.textContent = "未選択";
+
+    renderTalentGrid();
+    renderAdminList();
+  });
+
+  function renderAdminList(){
+    const ul = document.getElementById('adminTalentList');
+    ul.innerHTML = "";
+    if(talents.length === 0){
+      ul.innerHTML = '<li style="color:#9a968e;">登録済みタレントはいません</li>';
+      return;
+    }
+    talents.forEach(t => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${escapeHtml(t.name)}</span>`;
+      const delBtn = document.createElement('button');
+      delBtn.textContent = "削除";
+      delBtn.addEventListener('click', () => {
+        talents = talents.filter(x => x.id !== t.id);
+        renderTalentGrid();
+        renderAdminList();
+      });
+      li.appendChild(delBtn);
+      ul.appendChild(li);
+    });
+  }
+
+  function renderTalentGrid(){
+    const grid = document.getElementById('talentGrid');
+    const empty = document.getElementById('emptyState');
+    const count = document.getElementById('talentCount');
+    count.textContent = `${talents.length}名 所属`;
+
+    if(talents.length === 0){
+      grid.innerHTML = "";
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+
+    grid.innerHTML = talents.map(t => `
+      <div class="talent-card">
+        <div class="talent-photo" style="${t.photo ? `background-image:url(${t.photo})` : ''}">
+          ${t.photo ? '' : 'NO IMAGE'}
+        </div>
+        <div class="talent-body">
+          <p class="talent-name serif">${escapeHtml(t.name)}</p>
+          ${t.romaji ? `<p class="talent-romaji">${escapeHtml(t.romaji)}</p>` : ''}
+          <dl class="talent-meta">
+            ${t.birthday ? `<dt>誕生日</dt><dd>${escapeHtml(t.birthday)}</dd>` : ''}
+            ${t.blood ? `<dt>血液型</dt><dd>${escapeHtml(t.blood)}</dd>` : ''}
+            ${t.home ? `<dt>出身</dt><dd>${escapeHtml(t.home)}</dd>` : ''}
+          </dl>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  renderTalentGrid();
+</script>
+
+</body>
+</html>
